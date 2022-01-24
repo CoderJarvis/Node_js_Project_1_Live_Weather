@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LIVE weather app</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <style>
+      .mycard {
+        background-color: aqua;
+        height: 100vh;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .textcenter {
+        text-align: center;
+      }
+
+      .myBtn {
+        width: 5vw;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="mycard textcenter">
+      <div class="card mycard2 text center" style="width: 25rem">
+        <h2 class="textcenter" id="dayNight">dynamic day/night/evening</h2>
+        <h1 class="textcenter text-danger" id="cityName">------</h1>
+        <h3 class="textcenter" id="date">dynamic date</h3>
+        <h1 class="textcenter text-danger" id="temp">-------</h1>
+        <label for="ct">
+          <h3>Enter City Name :</h3>
+        </label>
+        <div class="container">
+          <input type="text" id="inputCity" />
+        </div>
+        <div class="container my-2">
+          <button id="btn" class="btn btn-primary myBtn">Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const date = document.getElementById("date");
+
+      const getDateTime = () => {
+        const d = new Date();
+        let text = d.toLocaleString();
+        return text;
+      };
+      date.innerHTML = getDateTime();
+      const dayNight = document.getElementById("dayNight");
+      const d = new Date();
+      let hour = d.getHours();
+      if (hour >= 6 && hour < 12) {
+        dayNight.innerHTML = "Good Morning...";
+      } else if (hour >= 12 && hour <= 17) {
+        dayNight.innerHTML = "Good Afternoon...";
+      } else if (hour >= 17 && hour <= 19) {
+        dayNight.innerHTML = "Good Evening...";
+      } else {
+        dayNight.innerHTML = "Good Night...";
+      }
+      const handleOnclick = () => {
+        const inputCity = document.getElementById("inputCity").value;
+        // console.log(inputCity);
+        let url = `https://api.openweathermap.org/data/2.5/weather?q=${inputCity}&appid=621b97856bff885ae1a275937e5fd145`;
+
+        const getTemp = async () => {
+          const response = await fetch(url);
+          const data = await response.json(); //json became object
+          // console.log(data);
+          if (data.cod == "404") {
+            alert("please enter valid city name");
+            throw new Error("please enter valid city name");
+          }
+          let city = data.name;
+          let temp = Math.round(data.main.temp - 273.15); //kelvin to cel
+          // console.log(city);
+          // console.log(temp);
+          document.getElementById("cityName").innerHTML = city;
+          document.getElementById("temp").innerHTML = temp + "&#8451";
+        };
+        getTemp();
+      };
+      const btn = document.getElementById("btn");
+      btn.addEventListener("click", handleOnclick);
+    </script>
+  </body>
+</html>
