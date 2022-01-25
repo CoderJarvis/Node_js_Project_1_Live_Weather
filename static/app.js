@@ -21,13 +21,14 @@ if (hour >= 6 && hour < 12) {
 const handleOnclick = () => {
   const inputCity = document.getElementById("inputCity").value;
   // console.log(inputCity);
-  let url = `https://api.openweathermap.org/data/2.5/weather?q=${inputCity}&appid=be444c535b830d605e535d63f2d6a4e5`;
+  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${inputCity}&appid=621b97856bff885ae1a275937e5fd145`;
 
   const getTemp = async () => {
-    const response = await fetch(url);
+    const response = await fetch(apiUrl);
     const data = await response.json(); //json became object
     // console.log(data);
     if (data.cod == "404") {
+      alert("please enter valid city name");
       throw new Error("please enter valid city name");
     }
     let city = data.name;
